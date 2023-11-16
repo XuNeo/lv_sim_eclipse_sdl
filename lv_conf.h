@@ -46,7 +46,7 @@
 
 #if LV_USE_STDLIB_MALLOC == LV_STDLIB_BUILTIN
     /*Size of the memory available for `lv_malloc()` in bytes (>= 2kB)*/
-    #define LV_MEM_SIZE (256 * 1024U)          /*[bytes]*/
+    #define LV_MEM_SIZE (256 * 1024U * 1024)          /*[bytes]*/
 
     /*Size of the memory expand for `lv_malloc()` in bytes*/
     #define LV_MEM_POOL_EXPAND_SIZE 0
@@ -573,10 +573,10 @@
 #endif
 
 /*API for open, read, etc*/
-#define LV_USE_FS_POSIX 0
+#define LV_USE_FS_POSIX 1
 #if LV_USE_FS_POSIX
-    #define LV_FS_POSIX_LETTER '\0'     /*Set an upper cased letter on which the drive will accessible (e.g. 'A')*/
-    #define LV_FS_POSIX_PATH ""         /*Set the working directory. File/directory paths will be appended to it.*/
+    #define LV_FS_POSIX_LETTER '/'     /*Set an upper cased letter on which the drive will accessible (e.g. 'A')*/
+    #define LV_FS_POSIX_PATH "/"         /*Set the working directory. File/directory paths will be appended to it.*/
     #define LV_FS_POSIX_CACHE_SIZE 0    /*>0 to cache this number of bytes in lv_fs_read()*/
 #endif
 
@@ -596,7 +596,7 @@
 #endif
 
 /*API for memory-mapped file access. */
-#define LV_USE_FS_MEMFS 0
+#define LV_USE_FS_MEMFS 1
 #if LV_USE_FS_MEMFS
     #define LV_FS_MEMFS_LETTER '\0'     /*Set an upper cased letter on which the drive will accessible (e.g. 'A')*/
 #endif
@@ -863,11 +863,11 @@
 /*Music player demo*/
 #define LV_USE_DEMO_MUSIC 1
 #if LV_USE_DEMO_MUSIC
-    #define LV_DEMO_MUSIC_SQUARE    0
-    #define LV_DEMO_MUSIC_LANDSCAPE 0
-    #define LV_DEMO_MUSIC_ROUND     0
-    #define LV_DEMO_MUSIC_LARGE     0
-    #define LV_DEMO_MUSIC_AUTO_PLAY 0
+    #define LV_DEMO_MUSIC_SQUARE    1
+    #define LV_DEMO_MUSIC_LANDSCAPE 1
+    #define LV_DEMO_MUSIC_ROUND     1
+    #define LV_DEMO_MUSIC_LARGE     1
+    #define LV_DEMO_MUSIC_AUTO_PLAY 1
 #endif
 
 /*Flex layout demo*/
@@ -884,6 +884,17 @@
 
 /*Vector graphic demo*/
 #define LV_USE_DEMO_VECTOR_GRAPHIC  1
+#define LV_USE_OBJ_PROPERTY         1
+
+#define LV_BIN_DECODER_RAM_LOAD     1
+#define LV_BIN_DECODER_CONVERT_INDEXED 1
+#define LV_BIN_DECODER_SUPPORT_TRANSFORM    1
+#define LV_USE_RLE                  1
+#define LV_USE_DEMO_RENDER          1
+#define LV_USE_VECTOR_GRAPHIC       1
+#define LV_USE_THORVG_INTERNAL      1
+#undef LV_USE_LODEPNG
+#define LV_USE_LODEPNG              1
 /*--END OF LV_CONF_H--*/
 
 #endif /*LV_CONF_H*/
