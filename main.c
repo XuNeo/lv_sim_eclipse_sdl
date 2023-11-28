@@ -67,8 +67,6 @@ LV_IMAGE_DECLARE(test_image_cogwheel_argb8888);
  *   GLOBAL FUNCTIONS
  **********************/
 
-<<<<<<< HEAD
-=======
 #include <dirent.h>
 
 static void create_pic_preview(void)
@@ -107,16 +105,16 @@ static void create_pic_preview(void)
             lv_obj_set_style_border_width(img, 1, 0);
             lv_obj_set_style_border_color(img, lv_color_hex(0xff0000), 0);
 
-            lv_image_set_rotation(img, 40);
             snprintf(path, sizeof(path), "%s/%s", root, dir->d_name);
             printf("add img: %s\n", path);
             lv_image_set_src(img, path);
+            lv_image_set_rotation(img, 40);
             // lv_obj_set_style_image_recolor_opa(img, LV_OPA_50, 0);
             // lv_obj_set_style_image_recolor(img, lv_color_hex(0xff0000), 0);
 
             lv_image_header_t header;
             lv_image_decoder_get_info(path, &header);
-            if (header.cf == LV_COLOR_FORMAT_A8) {
+            if (LV_COLOR_FORMAT_IS_ALPHA_ONLY(header.cf)) {
                 lv_obj_set_style_image_recolor(img, lv_color_hex(0xff0000), 0);
                 lv_obj_set_style_image_recolor_opa(img, LV_OPA_50, 0);
             }
@@ -359,6 +357,37 @@ void img_in_ram_test_rotate(void)
 }
 #endif
 
+
+void test_barcode_normal(void)
+{
+    lv_obj_t * barcode = lv_barcode_create(lv_scr_act());
+    lv_obj_center(barcode);
+
+    lv_color_t dark_color = lv_color_black();
+    lv_color_t light_color = lv_color_white();
+    uint16_t scale = 2;
+
+    lv_barcode_set_dark_color(barcode, dark_color);
+    lv_barcode_set_light_color(barcode, light_color);
+    lv_barcode_set_scale(barcode, scale);
+
+    lv_result_t res;
+    lv_image_dsc_t * image_dsc;
+    lv_barcode_set_direction(barcode, LV_DIR_HOR);
+    res = lv_barcode_update(barcode, "https://lvgl.io");
+    image_dsc = lv_canvas_get_image(barcode);
+
+    lv_obj_set_size(barcode, image_dsc->header.w, 50);
+
+    lv_barcode_set_direction(barcode, LV_DIR_VER);
+    res = lv_barcode_update(barcode, "https://lvgl.io");
+
+    image_dsc = lv_canvas_get_image(barcode);
+
+    lv_obj_set_size(barcode, 50, image_dsc->header.h);
+
+}
+
 int main(int argc, char **argv)
 {
   (void)argc; /*Unused*/
@@ -374,12 +403,21 @@ int main(int argc, char **argv)
   // test_property();
   // obj_property_example();
 
-  LV_IMAGE_DECLARE(test_image_cogwheel_i4);
+  LV_IMAGE_DECLARE(cogwheel);
 
-  img_create("avatar", "/home/neo/projects/lvgl/lv_port_pc_eclipse/output/cogwheel.RGB888.bin", false, false);
-  // img_create("avatar", &test_image_cogwheel_i4, true, true);
+  // img_create("avatar", "/home/neo/projects/lvgl/lv_port_pc_eclipse/output/cogwheel.RGB888.bin", true, false);
+  // img_create("avatar", &cogwheel, true, true);
+  // test_barcode_normal();
+  // lv_example_barcode_1();
 
+  // uint8_t * mm = lv_malloc(16);
+  // mm[128] = 0x12;
   // create_pic_preview();
+
+  // lv_obj_t* label = lv_label_create(lv_screen_active());
+  // lv_obj_set_style_text_font(label, &lv_font_montserrat_48, 0);
+  // lv_label_set_text(label, "HELLO\u200E\u202A WORLD!\u202C\u200E");
+  // lv_obj_center(label);
 
   // lv_obj_set_flex_flow(lv_screen_active(), LV_FLEX_FLOW_ROW_WRAP);
   // lv_obj_set_flex_align(lv_screen_active(), LV_FLEX_ALIGN_SPACE_EVENLY, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_SPACE_EVENLY);
@@ -415,7 +453,7 @@ int main(int argc, char **argv)
     // lv_obj_set_size(child, 1000, 1000);
   // lv_demo_widgets();
   // lv_obj_set_style_opa(lv_screen_active(), LV_OPA_50, 0);
-  // lv_demo_render(0, LV_OPA_80);
+  // lv_demo_render(LV_DEMO_RENDER_SCENE_DECODE_SPEED, LV_OPA_80);
 
   // lv_snapshot_take(lv_scr_act(), LV_COLOR_FORMAT_ARGB8888);
   while(1) {
@@ -424,7 +462,7 @@ int main(int argc, char **argv)
       lv_timer_handler();
       static int count;
       if (count++ == 1) {
-        lv_snapshot_take(lv_scr_act(), LV_COLOR_FORMAT_ARGB8888);
+        // lv_snapshot_take(lv_scr_act(), LV_COLOR_FORMAT_ARGB8888);
       }
       usleep(1 * 1000);
   }

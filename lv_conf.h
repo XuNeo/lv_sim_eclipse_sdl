@@ -17,8 +17,6 @@
 #ifndef LV_CONF_H
 #define LV_CONF_H
 
-#include <stdint.h>
-
 #define LV_USE_DEV_VERSION 1
 
 /*====================
@@ -76,7 +74,7 @@
  *========================*/
 
 /*Align the stride of all layers and images to this bytes*/
-#define LV_DRAW_BUF_STRIDE_ALIGN                1
+#define LV_DRAW_BUF_STRIDE_ALIGN                64
 
 /*Align the start address of draw_buf addresses to this bytes*/
 #define LV_DRAW_BUF_ALIGN                       4
@@ -208,8 +206,8 @@
 #define LV_USE_ASSERT_OBJ           0   /*Check the object's type and existence (e.g. not deleted). (Slow)*/
 
 /*Add a custom handler when assert happens e.g. to restart the MCU*/
-#define LV_ASSERT_HANDLER_INCLUDE <stdint.h>
-#define LV_ASSERT_HANDLER while(1);   /*Halt by default*/
+#define LV_ASSERT_HANDLER_INCLUDE <stdlib.h>
+#define LV_ASSERT_HANDLER exit(0);   /*Halt by default*/
 
 /*-------------
  * Debug
@@ -667,7 +665,6 @@
 #define LV_USE_VECTOR_GRAPHIC  1
 
 /* Enable ThorVG (vector graphics library) from the src/libs folder */
-#define LV_USE_THORVG_INTERNAL 1
 
 /* Enable ThorVG by assuming that its installed and linked to the project */
 #define LV_USE_THORVG_EXTERNAL 0
@@ -884,7 +881,6 @@
 
 /*Vector graphic demo*/
 #define LV_USE_DEMO_VECTOR_GRAPHIC  1
-#define LV_USE_OBJ_PROPERTY         1
 
 #define LV_BIN_DECODER_RAM_LOAD     1
 #define LV_BIN_DECODER_CONVERT_INDEXED 1
@@ -895,6 +891,8 @@
 #define LV_USE_THORVG_INTERNAL      1
 #undef LV_USE_LODEPNG
 #define LV_USE_LODEPNG              1
+#define LV_USE_LZ4                  1
+#define LV_USE_LZ4_INTERNAL         1
 /*--END OF LV_CONF_H--*/
 
 #endif /*LV_CONF_H*/

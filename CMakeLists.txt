@@ -21,11 +21,16 @@ add_compile_definitions(LV_CONF_INCLUDE_SIMPLE)
 target_link_libraries(main lvgl lvgl::examples lvgl::demos lvgl::thorvg ${SDL2_LIBRARIES} m pthread)
 add_custom_target (run COMMAND ${EXECUTABLE_OUTPUT_PATH}/main DEPENDS main)
 
-target_compile_options(lvgl PRIVATE -Wall -Werror -Werror=float-conversion)
-
 # Options lvgl and examples are compiled with.
 set(COMPILE_OPTIONS
-    -pedantic-errors
+    # -fsanitize=address
+    --coverage
+    # -Wno-unused-variable
+    # -Wno-unused-function
+    # -Wno-unused-but-set-variable
+    # -Wno-format-truncation
+    # -Wno-undef
+    # -pedantic-errors
     -Wall
     -Wclobbered
     -Wdeprecated
@@ -35,20 +40,23 @@ set(COMPILE_OPTIONS
     -Wextra
     -Wformat-security
     -Wmaybe-uninitialized
-    -Wmissing-prototypes
+    # -Wmissing-prototypes
     -Wpointer-arith
     -Wmultichar
-    -Wpedantic
+    # -Wpedantic
     -Wreturn-type
     -Wshadow
     -Wshift-negative-value
     -Wsizeof-pointer-memaccess
     -Wstack-usage=5000
     -Wtype-limits
-    -Wundef
+    # -Wundef
     -Wuninitialized
     -Wunreachable-code
     -Werror=float-conversion
     -Werror=strict-aliasing
     -Werror=maybe-uninitialized
 )
+
+# target_compile_options(lvgl PRIVATE -Wall -Werror -Werror=float-conversion ${COMPILE_OPTIONS})
+# target_link_options(lvgl PRIVATE -fsanitize=address)
