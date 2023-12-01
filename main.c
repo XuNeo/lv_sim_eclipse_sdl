@@ -91,7 +91,9 @@ int main(int argc, char **argv)
 //  lv_example_flex_3();
 //  lv_example_label_1();
 
-    lv_demo_widgets();
+    // lv_demo_widgets();
+  void lvx_canvas_example(void);
+  lvx_canvas_example();
 
   while(1) {
       /* Periodically call the lv_task handler.
