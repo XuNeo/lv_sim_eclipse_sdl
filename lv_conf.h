@@ -37,11 +37,6 @@
  * - LV_STDLIB_RTTHREAD:    RT-Thread implementation
  * - LV_STDLIB_CUSTOM:      Implement the functions externally
  */
-<<<<<<< HEAD
-#define LV_USE_STDLIB_MALLOC    LV_STDLIB_CLIB
-#define LV_USE_STDLIB_STRING    LV_STDLIB_CLIB
-#define LV_USE_STDLIB_SPRINTF   LV_STDLIB_CLIB
-=======
 
 #ifdef NDEBUG
 #define LV_USE_STDLIB_MALLOC    LV_STDLIB_BUILTIN
@@ -53,7 +48,6 @@
 #define LV_USE_STDLIB_STRING    LV_STDLIB_CLIB
 #define LV_USE_STDLIB_SPRINTF   LV_STDLIB_CLIB
 #endif
->>>>>>> origin/master
 
 
 #if LV_USE_STDLIB_MALLOC == LV_STDLIB_BUILTIN
@@ -638,7 +632,7 @@
 /*Decode bin images to RAM*/
 #define LV_BIN_DECODER_RAM_LOAD 1
 
-/*RLE decoder library*/
+/*RLE decompress library*/
 #define LV_USE_RLE 1
 
 /*QR code library*/
