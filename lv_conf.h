@@ -37,9 +37,23 @@
  * - LV_STDLIB_RTTHREAD:    RT-Thread implementation
  * - LV_STDLIB_CUSTOM:      Implement the functions externally
  */
+<<<<<<< HEAD
 #define LV_USE_STDLIB_MALLOC    LV_STDLIB_CLIB
 #define LV_USE_STDLIB_STRING    LV_STDLIB_CLIB
 #define LV_USE_STDLIB_SPRINTF   LV_STDLIB_CLIB
+=======
+
+#ifdef NDEBUG
+#define LV_USE_STDLIB_MALLOC    LV_STDLIB_BUILTIN
+#define LV_USE_STDLIB_STRING    LV_STDLIB_BUILTIN
+#define LV_USE_STDLIB_SPRINTF   LV_STDLIB_BUILTIN
+#else
+/*Use stdlib in debug mode to enable ASAN check etc.*/
+#define LV_USE_STDLIB_MALLOC    LV_STDLIB_CLIB
+#define LV_USE_STDLIB_STRING    LV_STDLIB_CLIB
+#define LV_USE_STDLIB_SPRINTF   LV_STDLIB_CLIB
+#endif
+>>>>>>> origin/master
 
 
 #if LV_USE_STDLIB_MALLOC == LV_STDLIB_BUILTIN
@@ -78,9 +92,6 @@
 
 /*Align the start address of draw_buf addresses to this bytes*/
 #define LV_DRAW_BUF_ALIGN                       4
-
-/* Max. memory to be used for layers */
-#define  LV_LAYER_MAX_MEMORY_USAGE             150       /*[kB]*/
 
 #define LV_USE_DRAW_SW 1
 #if LV_USE_DRAW_SW == 1
@@ -128,7 +139,9 @@
 #define LV_USE_DRAW_PXP 0
 
 /* Draw using cached SDL textures*/
+#ifndef LV_USE_DRAW_SDL
 #define LV_USE_DRAW_SDL 0
+#endif
 
 /*=================
  * OPERATING SYSTEM
@@ -477,6 +490,7 @@
 #if LV_USE_LABEL
     #define LV_LABEL_TEXT_SELECTION 1 /*Enable selecting text of the label*/
     #define LV_LABEL_LONG_TXT_HINT 1  /*Store some extra info in labels to speed up drawing of very long texts*/
+    #define LV_LABEL_WAIT_CHAR_COUNT 3  /*The count of wait chart*/
 #endif
 
 #define LV_USE_LED        1
@@ -669,6 +683,15 @@
 /* Enable ThorVG by assuming that its installed and linked to the project */
 #define LV_USE_THORVG_EXTERNAL 0
 
+/*Enable LZ4 compress/decompress lib*/
+#define LV_USE_LZ4  1
+
+/*Use lvgl built-in LZ4 lib*/
+#define LV_USE_LZ4_INTERNAL  1
+
+/*Use external LZ4 library*/
+#define LV_USE_LZ4_EXTERNAL  0
+
 /*FFmpeg library for image decoding and playing videos
  *Supports all major image formats so do not enable other image decoder with it*/
 #define LV_USE_FFMPEG 0
@@ -685,7 +708,7 @@
 #define LV_USE_SNAPSHOT 1
 
 /*1: Enable system monitor component*/
-#define LV_USE_SYSMON 1
+#define LV_USE_SYSMON   (LV_USE_MEM_MONITOR | LV_USE_PERF_MONITOR)
 
 /*1: Enable the runtime performance profiler*/
 #define LV_USE_PROFILER 0
