@@ -271,7 +271,7 @@
  *Used by image decoders such as `lv_lodepng` to keep the decoded image in the memory.
  *Data larger than the size of the cache also can be allocated but
  *will be dropped immediately after usage.*/
-#define LV_CACHE_DEF_SIZE       0
+#define LV_CACHE_DEF_SIZE       (32U * 1024*1024U)
 
 /*Number of stops allowed per gradient. Increase this to allow more stops.
  *This adds (sizeof(lv_color_t) + 1) bytes per additional stop*/
@@ -612,7 +612,7 @@
 
 /*PNG decoder(libpng) library*/
 #ifndef LV_USE_LIBPNG
-#define LV_USE_LIBPNG 0
+#define LV_USE_LIBPNG 1
 #endif
 
 /*BMP decoder library*/
@@ -624,13 +624,15 @@
 
 /* libjpeg-turbo decoder library.
  * Supports complete JPEG specifications and high-performance JPEG decoding. */
-#define LV_USE_LIBJPEG_TURBO 0
+#ifndef LV_USE_LIBJPEG_TURBO
+#define LV_USE_LIBJPEG_TURBO 1
+#endif
 
 /*GIF decoder library*/
 #define LV_USE_GIF 1
 
 /*Decode bin images to RAM*/
-#define LV_BIN_DECODER_RAM_LOAD 1
+#define LV_BIN_DECODER_RAM_LOAD 0
 
 /*RLE decompress library*/
 #define LV_USE_RLE 1
@@ -901,7 +903,6 @@
 /*Vector graphic demo*/
 #define LV_USE_DEMO_VECTOR_GRAPHIC  1
 
-#define LV_BIN_DECODER_RAM_LOAD     1
 #define LV_BIN_DECODER_CONVERT_INDEXED 1
 #define LV_BIN_DECODER_SUPPORT_TRANSFORM    1
 #define LV_USE_RLE                  1

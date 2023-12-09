@@ -3,6 +3,7 @@ project(lvgl)
 
 option(LV_USE_DRAW_SDL "Use SDL draw unit" OFF)
 option(LV_USE_LIBPNG "Use libpng to decode PNG" OFF)
+option(LV_USE_LIBJPEG_TURBO "Use libjpeg turbo to decode JPEG" OFF)
 
 set(CMAKE_C_STANDARD 11)#C11
 set(CMAKE_CXX_STANDARD 17)#C17
@@ -14,17 +15,20 @@ find_package(SDL2 REQUIRED SDL2)
 
 add_compile_definitions($<$<BOOL:${LV_USE_DRAW_SDL}>:LV_USE_DRAW_SDL=1>)
 add_compile_definitions($<$<BOOL:${LV_USE_LIBPNG}>:LV_USE_LIBPNG=1>)
+add_compile_definitions($<$<BOOL:${LV_USE_LIBJPEG_TURBO}>:LV_USE_LIBJPEG_TURBO=1>)
 
 add_subdirectory(lvgl)
 target_include_directories(lvgl PUBLIC ${PROJECT_SOURCE_DIR} ${SDL2_INCLUDE_DIRS})
 
-add_executable(main main.c mouse_cursor_icon.c)
+file(GLOB_RECURSE TEST_IMAGES ${CMAKE_CURRENT_SOURCE_DIR}/output/*.c)
+
+add_executable(main main.c mouse_cursor_icon.c ${TEST_IMAGES})
 target_compile_definitions(main PRIVATE LV_CONF_INCLUDE_SIMPLE)
 target_link_libraries(main lvgl lvgl::examples lvgl::demos lvgl::thorvg ${SDL2_LIBRARIES} m pthread)
 add_custom_target (run COMMAND ${EXECUTABLE_OUTPUT_PATH}/main DEPENDS main)
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 if(LV_USE_DRAW_SDL)
-    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
     # Need to install libsdl2-image-dev
     # `sudo apt install libsdl2-image-dev`
     # `brew install sdl2_image`
@@ -38,6 +42,15 @@ if(LV_USE_LIBPNG)
     target_include_directories(lvgl PUBLIC ${PNG_INCLUDE_DIR})
     target_link_libraries(main ${PNG_LIBRARY})
 endif(LV_USE_LIBPNG)
+
+if(LV_USE_LIBJPEG_TURBO)
+    # Need to install libjpeg-turbo8-dev
+    # `sudo apt install libjpeg-turbo8-dev`
+    # `brew install libjpeg-turbo`
+    find_package(JPEG REQUIRED)
+    target_include_directories(lvgl PUBLIC ${JPEG_INCLUDE_DIRS})
+    target_link_libraries(main ${JPEG_LIBRARIES})
+endif(LV_USE_LIBJPEG_TURBO)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     target_compile_options(lvgl PRIVATE
@@ -64,6 +77,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
         -Wunreachable-code
         -Wfloat-conversion
         -Wstrict-aliasing
+        -Wunused-variable
     )
 
     target_compile_options(main PRIVATE -fsanitize=address,leak,undefined)
