@@ -83,7 +83,7 @@ static void create_pic_preview(void)
     lv_obj_set_flex_flow(cont, LV_FLEX_FLOW_COLUMN);
 
     static const char* const roots[] = {
-        "/home/neo/projects/lvgl/lv_port_pc_eclipse/output/",
+        "/home/neo/projects/lvgl/lv_port_pc_eclipse/output/rle_compressed/",
     };
 
     char path[256];
@@ -108,7 +108,7 @@ static void create_pic_preview(void)
             snprintf(path, sizeof(path), "%s/%s", root, dir->d_name);
             printf("add img: %s\n", path);
             lv_image_set_src(img, path);
-            lv_image_set_rotation(img, 40);
+            // lv_image_set_rotation(img, 40);
             // lv_obj_set_style_image_recolor_opa(img, LV_OPA_50, 0);
             // lv_obj_set_style_image_recolor(img, lv_color_hex(0xff0000), 0);
 
@@ -207,7 +207,7 @@ static void obj_property_example(void)
     lv_obj_t * obj = lv_obj_class_create_obj(info->clz, lv_scr_act());
     lv_obj_class_init_obj(obj);
 
-    // LV_OBJ_PROPERTY_ARRAY_SET(obj, info->properties);
+    // LV_OBJ_SET_PROPERTY_ARRAY(obj, info->properties);
     for (int j = 0; j < info->properties_count; j++) {
       lv_obj_set_property(obj, &info->properties[j]);
     }
@@ -387,7 +387,48 @@ void test_barcode_normal(void)
     lv_obj_set_size(barcode, 50, image_dsc->header.h);
 
 }
+static void event_cb(lv_event_t * e)
+{
+  lv_event_code_t code = lv_event_get_code(e);
+  lv_obj_t * label = lv_event_get_user_data(e);
 
+  switch(code) {
+      case LV_EVENT_PRESSED:
+          lv_label_set_text(label, "The last button event:\nLV_EVENT_PRESSED");
+          LV_LOG_USER("PRESSED");
+          break;
+      case LV_EVENT_CLICKED:
+          lv_label_set_text(label, "The last button event:\nLV_EVENT_CLICKED");
+          LV_LOG_USER("LV_EVENT_CLICKED");
+          break;
+      case LV_EVENT_LONG_PRESSED:
+          lv_label_set_text(label, "The last button event:\nLV_EVENT_LONG_PRESSED");
+          LV_LOG_USER("LV_EVENT_LONG_PRESSED");
+          break;
+      case LV_EVENT_LONG_PRESSED_REPEAT:
+          lv_label_set_text(label, "The last button event:\nLV_EVENT_LONG_PRESSED_REPEAT");
+          LV_LOG_USER("LV_EVENT_LONG_PRESSED_REPEAT");
+          break;
+      default:
+          break;
+  }
+}
+
+void event_test(void)
+{
+  lv_obj_t * btn = lv_button_create(lv_screen_active());
+  lv_obj_set_size(btn, 100, 50);
+  lv_obj_center(btn);
+
+  lv_obj_t * btn_label = lv_label_create(btn);
+  lv_label_set_text(btn_label, "Click me!");
+  lv_obj_center(btn_label);
+
+  lv_obj_t * info_label = lv_label_create(lv_screen_active());
+  lv_label_set_text(info_label, "The last button event:\nNone");
+
+  lv_obj_add_event_cb(btn, event_cb, LV_EVENT_ALL, info_label);
+}
 int main(int argc, char **argv)
 {
   (void)argc; /*Unused*/
@@ -397,7 +438,6 @@ int main(int argc, char **argv)
   lv_init();
 
   /*Initialize the display, and the input devices*/
-  hal_init(320, 240);
 
   /*Open a demo or an example*/
   // if (argc == 0) {
@@ -418,15 +458,28 @@ int main(int argc, char **argv)
   // obj_property_example();
 
   LV_IMAGE_DECLARE(cogwheel);
+  LV_IMAGE_DECLARE(cogwheel_i8_stride112_RLE);
+  LV_IMAGE_DECLARE(cogwheel_rgb888_stride304_RLE);
+  LV_IMAGE_DECLARE(cogwheel_xrgb8888_RLE);
+  LV_IMAGE_DECLARE(cogwheel_rgb565a8_stride208_RLE);
+  LV_IMAGE_DECLARE(cogwheel_a4_stride64_RLE);
+  LV_IMAGE_DECLARE(cogwheel_i8_stride112);
+  LV_IMAGE_DECLARE(cogwheel_rgb565_stride208);
+  LV_IMAGE_DECLARE(cogwheel_I1);
+  LV_IMAGE_DECLARE(cogwheel_ARGB8888);
 
-  // img_create("avatar", "/home/neo/projects/lvgl/lv_port_pc_eclipse/output/cogwheel.RGB888.bin", true, false);
-  // img_create("avatar", &cogwheel, true, true);
+  // img_create("avatar", "/home/neo/projects/lvgl/lv_port_pc_eclipse/output/cogwheel.RGB565.bin", false, false);
+  // img_create("avatar", "/home/neo/projects/lvgl/lv_port_pc_eclipse/mouse_cursor_icon.png", false, false);
+  img_create("avatar", "/home/neo/projects/lvgl/lv_port_pc_eclipse/flower.jpg", false, false);
+  // img_create("avatar", &cogwheel_I1, false, false);
   // test_barcode_normal();
+  // lv_example_canvas_3();
+  // event_test();
   // lv_example_barcode_1();
 
   // uint8_t * mm = lv_malloc(16);
   // mm[128] = 0x12;
-  create_pic_preview();
+  // create_pic_preview();
 
   // lv_obj_t* label = lv_label_create(lv_screen_active());
   // lv_obj_set_style_text_font(label, &lv_font_montserrat_48, 0);
@@ -506,11 +559,15 @@ static lv_display_t * hal_init(int32_t w, int32_t h)
   lv_indev_set_disp(mouse, disp);
   lv_display_set_default(disp);
 
+  LV_IMAGE_DECLARE(cogwheel_I1);
+  LV_IMAGE_DECLARE(cogwheel_ARGB8888);
   LV_IMAGE_DECLARE(mouse_cursor_icon); /*Declare the image file.*/
-  // lv_obj_t * cursor_obj;
-  // cursor_obj = lv_image_create(lv_screen_active()); /*Create an image object for the cursor */
-  // lv_image_set_src(cursor_obj, &mouse_cursor_icon);           /*Set the image source*/
-  // lv_indev_set_cursor(mouse, cursor_obj);             /*Connect the image  object to the driver*/
+  lv_obj_t * cursor_obj;
+  cursor_obj = lv_image_create(lv_screen_active()); /*Create an image object for the cursor */
+  lv_image_set_src(cursor_obj, &mouse_cursor_icon);           /*Set the image source*/
+  // lv_obj_set_style_outline_color(cursor_obj, lv_color_black(), 0);
+  // lv_obj_set_style_outline_width(cursor_obj, 1, 0);
+  lv_indev_set_cursor(mouse, cursor_obj);             /*Connect the image  object to the driver*/
 
   lv_indev_t * mousewheel = lv_sdl_mousewheel_create();
   lv_indev_set_disp(mousewheel, disp);
