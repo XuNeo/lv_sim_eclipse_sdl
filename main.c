@@ -429,6 +429,70 @@ void event_test(void)
 
   lv_obj_add_event_cb(btn, event_cb, LV_EVENT_ALL, info_label);
 }
+
+void lv_image_test(void){
+   int ww = 200;
+   lv_obj_t* native = lv_obj_create(lv_scr_act());
+   lv_obj_remove_style_all(native);
+   lv_obj_set_width(native,ww);
+   lv_obj_set_height(native,ww);
+   lv_obj_set_pos(native, 0, 0);
+
+   lv_obj_t* img_ = lv_img_create(native);
+   lv_obj_remove_style_all(img_);
+   lv_obj_set_pos(img_, 0, 0);
+   lv_img_set_src(img_, "/home/neo/projects/lvgl/lv_port_pc_eclipse/00.png");
+   lv_obj_set_width(img_,ww);
+   lv_obj_set_height(img_,ww);
+
+   lv_obj_set_style_bg_color(img_, lv_palette_main(LV_PALETTE_RED), LV_PART_MAIN);
+   lv_obj_set_style_bg_opa(img_, LV_OPA_80, LV_PART_MAIN);
+
+  // lv_img_set_pivot(img_, 0, 0);
+   lv_image_set_scale(img_, 512);
+}
+
+
+static lv_obj_t * create_panel(int32_t radius, bool transform)
+{
+    lv_obj_t * parent = lv_obj_create(lv_screen_active());
+    lv_obj_set_style_pad_all(parent, 3, 0);
+    lv_obj_set_style_radius(parent, radius, 0);
+    lv_obj_set_style_clip_corner(parent, true, 0);
+    if(transform) lv_obj_set_style_transform_rotation(parent, 300, 0);
+
+    lv_obj_t * label = lv_label_create(parent);
+    lv_obj_set_width(label, lv_pct(200));
+    lv_label_set_text(label,
+                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus dignissim quam id eros iaculis dapibus. Mauris nisl orci, vulputate sed eleifend a, consectetur et nulla.");
+    lv_obj_set_style_text_font(label, &lv_font_montserrat_24, 0);
+    lv_obj_set_style_bg_color(label, lv_palette_main(LV_PALETTE_RED), 0);
+    lv_obj_set_style_bg_opa(label, LV_OPA_20, 0);
+
+    lv_obj_update_layout(parent);
+    lv_obj_scroll_by(parent, -15, -15, LV_ANIM_OFF);
+
+    return parent;
+}
+
+void test_func_1(void)
+{
+    lv_obj_set_flex_flow(lv_screen_active(), LV_FLEX_FLOW_ROW_WRAP);
+    lv_obj_set_flex_align(lv_screen_active(), LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_SPACE_EVENLY);
+    lv_obj_set_style_pad_column(lv_screen_active(), 40, 0);
+
+    create_panel(0, false);
+    create_panel(10, false);
+    create_panel(30, false);
+    create_panel(100, false);
+
+    lv_obj_t * cont = create_panel(0, true);
+    lv_obj_add_flag(cont, LV_OBJ_FLAG_FLEX_IN_NEW_TRACK);
+    create_panel(10, true);
+    create_panel(30, true);
+    create_panel(100, true);
+}
+
 int main(int argc, char **argv)
 {
   (void)argc; /*Unused*/
@@ -452,7 +516,7 @@ int main(int argc, char **argv)
 
   /*To hide the memory and performance indicators in the corners
    *disable `LV_USE_MEM_MONITOR` and `LV_USE_PERF_MONITOR` in `lv_conf.h`*/
-  hal_init(800, 480);
+  hal_init(480, 320);
 
   // test_property();
   // obj_property_example();
@@ -468,11 +532,15 @@ int main(int argc, char **argv)
   LV_IMAGE_DECLARE(cogwheel_I1);
   LV_IMAGE_DECLARE(cogwheel_ARGB8888);
 
+  // test_func_1();
   // img_create("avatar", "/home/neo/projects/lvgl/lv_port_pc_eclipse/output/cogwheel.RGB565.bin", false, false);
+  // img_create("avatar", "A:lvgl/tests/test_images/stride_align1/UNCOMPRESSED/test_A2.bin", false, false);
+  // lv_demo_render(LV_DEMO_RENDER_SCENE_DECODE_SPEED, 0);
   // img_create("avatar", "/home/neo/projects/lvgl/lv_port_pc_eclipse/mouse_cursor_icon.png", false, false);
-  img_create("avatar", "/home/neo/projects/lvgl/lv_port_pc_eclipse/flower.jpg", false, false);
+  // img_create("avatar", "/home/neo/projects/lvgl/lv_port_pc_eclipse/flower.jpg", false, false);
   // img_create("avatar", &cogwheel_I1, false, false);
   // test_barcode_normal();
+  // lv_image_test();
   // lv_example_canvas_3();
   // event_test();
   // lv_example_barcode_1();
@@ -518,10 +586,10 @@ int main(int argc, char **argv)
 
     // lv_obj_set_pos(child, 0, 0);
     // lv_obj_set_size(child, 1000, 1000);
-  // lv_demo_widgets();
+  lv_demo_widgets();
   // lv_obj_set_style_opa(lv_screen_active(), LV_OPA_50, 0);
   // lv_demo_render(LV_DEMO_RENDER_SCENE_DECODE_SPEED, LV_OPA_80);
-
+  // lv_example_qrcode_1();
   // lv_snapshot_take(lv_scr_act(), LV_COLOR_FORMAT_ARGB8888);
   while(1) {
       /* Periodically call the lv_task handler.

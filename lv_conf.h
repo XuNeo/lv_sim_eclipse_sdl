@@ -82,7 +82,7 @@
  *========================*/
 
 /*Align the stride of all layers and images to this bytes*/
-#define LV_DRAW_BUF_STRIDE_ALIGN                64
+#define LV_DRAW_BUF_STRIDE_ALIGN                1
 
 /*Align the start address of draw_buf addresses to this bytes*/
 #define LV_DRAW_BUF_ALIGN                       4
@@ -574,7 +574,7 @@
 #define LV_USE_FS_STDIO 1
 #if LV_USE_FS_STDIO
     #define LV_FS_STDIO_LETTER 'A'     /*Set an upper cased letter on which the drive will accessible (e.g. 'A')*/
-    #define LV_FS_STDIO_PATH ""         /*Set the working directory. File/directory paths will be appended to it.*/
+    #define LV_FS_STDIO_PATH "/home/neo/projects/lvgl/lv_port_pc_eclipse/"         /*Set the working directory. File/directory paths will be appended to it.*/
     #define LV_FS_STDIO_CACHE_SIZE 256    /*>0 to cache this number of bytes in lv_fs_read()*/
 #endif
 
@@ -612,7 +612,7 @@
 
 /*PNG decoder(libpng) library*/
 #ifndef LV_USE_LIBPNG
-#define LV_USE_LIBPNG 1
+#define LV_USE_LIBPNG 0
 #endif
 
 /*BMP decoder library*/
@@ -625,7 +625,7 @@
 /* libjpeg-turbo decoder library.
  * Supports complete JPEG specifications and high-performance JPEG decoding. */
 #ifndef LV_USE_LIBJPEG_TURBO
-#define LV_USE_LIBJPEG_TURBO 1
+#define LV_USE_LIBJPEG_TURBO 0
 #endif
 
 /*GIF decoder library*/
@@ -674,20 +674,18 @@
 #define LV_USE_RLOTTIE 0
 
 /*Enable Vector Graphic APIs*/
-#define LV_USE_VECTOR_GRAPHIC  1
+#define LV_USE_VECTOR_GRAPHIC  0
 
-/* Enable ThorVG (vector graphics library) from the src/libs folder */
+/* Use ThorVG to support lvgl's vector API*/
+#define LV_USE_THORVG  1
 
-/* Enable ThorVG by assuming that its installed and linked to the project */
+/* Enable external ThorVG instead of lvgl built-in lib*/
 #define LV_USE_THORVG_EXTERNAL 0
 
 /*Enable LZ4 compress/decompress lib*/
 #define LV_USE_LZ4  1
 
-/*Use lvgl built-in LZ4 lib*/
-#define LV_USE_LZ4_INTERNAL  1
-
-/*Use external LZ4 library*/
+/*Use external LZ4 library instead of lvgl built-in lib*/
 #define LV_USE_LZ4_EXTERNAL  0
 
 /*FFmpeg library for image decoding and playing videos
@@ -904,18 +902,19 @@
 #define LV_USE_DEMO_SCROLL          1
 
 /*Vector graphic demo*/
-#define LV_USE_DEMO_VECTOR_GRAPHIC  1
+#define LV_USE_DEMO_VECTOR_GRAPHIC  0
 
 #define LV_BIN_DECODER_CONVERT_INDEXED 1
 #define LV_BIN_DECODER_SUPPORT_TRANSFORM    1
 #define LV_USE_RLE                  1
 #define LV_USE_DEMO_RENDER          1
-#define LV_USE_VECTOR_GRAPHIC       1
-#define LV_USE_THORVG_INTERNAL      1
+#define LV_USE_VECTOR_GRAPHIC       0
+#define LV_USE_THORVG               1
 #undef LV_USE_LODEPNG
 #define LV_USE_LODEPNG              1
 #define LV_USE_LZ4                  1
 #define LV_USE_LZ4_INTERNAL         1
+#define LV_SDL_MOUSEWHEEL_MODE      0
 /*--END OF LV_CONF_H--*/
 
 #endif /*LV_CONF_H*/
