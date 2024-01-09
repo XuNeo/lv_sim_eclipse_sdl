@@ -532,9 +532,10 @@ int main(int argc, char **argv)
   LV_IMAGE_DECLARE(cogwheel_I1);
   LV_IMAGE_DECLARE(cogwheel_ARGB8888);
 
+  // lv_example_ffmpeg_2();
   // test_func_1();
   // img_create("avatar", "/home/neo/projects/lvgl/lv_port_pc_eclipse/output/cogwheel.RGB565.bin", false, false);
-  // img_create("avatar", "A:lvgl/tests/test_images/stride_align1/UNCOMPRESSED/test_A2.bin", false, false);
+  // img_create("avatar", "A:lvgl/tests/test_images/stride_align1/UNCOMPRESSED/test_ARGB8888.bin", false, false);
   // lv_demo_render(LV_DEMO_RENDER_SCENE_DECODE_SPEED, 0);
   // img_create("avatar", "/home/neo/projects/lvgl/lv_port_pc_eclipse/mouse_cursor_icon.png", false, false);
   // img_create("avatar", "/home/neo/projects/lvgl/lv_port_pc_eclipse/flower.jpg", false, false);
@@ -565,8 +566,11 @@ int main(int argc, char **argv)
   // lv_obj_t * img1 = lv_image_create(lv_scr_act());
   // lv_image_set_src(img1,  "/home/neo/projects/lvgl/lv_port_pc_eclipse/lvgl/tests/src/test_files/binimages/cogwheel.RGB565A8.bin");
   // lv_image_set_rotation(img1, 450);
-  // lv_demo_widgets();
+  lv_demo_widgets();
+    //  lv_demo_music();
+    //  lv_demo_widgets();
   // lv_example_image_1();
+  // lv_example_spinner_1();
   // lv_obj_dump_tree(NULL);
 //   lv_obj_t * img = lv_image_create(lv_scr_act());
 //   lv_image_set_src(img, "/home/neo/projects/lvgl/lv_port_pc_eclipse/lvgl/tests/src/test_files/binimages/cogwheel.RGB565A8.bin");
@@ -586,9 +590,10 @@ int main(int argc, char **argv)
 
     // lv_obj_set_pos(child, 0, 0);
     // lv_obj_set_size(child, 1000, 1000);
-  lv_demo_widgets();
+  // lv_demo_widgets();
   // lv_obj_set_style_opa(lv_screen_active(), LV_OPA_50, 0);
   // lv_demo_render(LV_DEMO_RENDER_SCENE_DECODE_SPEED, LV_OPA_80);
+  // lv_demo_render(LV_DEMO_RENDER_SCENE_ARC_IMAGE, LV_OPA_80);
   // lv_example_qrcode_1();
   // lv_snapshot_take(lv_scr_act(), LV_COLOR_FORMAT_ARGB8888);
   while(1) {

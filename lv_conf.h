@@ -82,7 +82,7 @@
  *========================*/
 
 /*Align the stride of all layers and images to this bytes*/
-#define LV_DRAW_BUF_STRIDE_ALIGN                1
+#define LV_DRAW_BUF_STRIDE_ALIGN                128
 
 /*Align the start address of draw_buf addresses to this bytes*/
 #define LV_DRAW_BUF_ALIGN                       4
@@ -271,7 +271,7 @@
  *Used by image decoders such as `lv_lodepng` to keep the decoded image in the memory.
  *Data larger than the size of the cache also can be allocated but
  *will be dropped immediately after usage.*/
-#define LV_CACHE_DEF_SIZE       (32U * 1024*1024U)
+#define LV_CACHE_DEF_SIZE       (1024)
 
 /*Number of stops allowed per gradient. Increase this to allow more stops.
  *This adds (sizeof(lv_color_t) + 1) bytes per additional stop*/
@@ -632,7 +632,7 @@
 #define LV_USE_GIF 1
 
 /*Decode bin images to RAM*/
-#define LV_BIN_DECODER_RAM_LOAD 0
+#define LV_BIN_DECODER_RAM_LOAD 1
 
 /*RLE decompress library*/
 #define LV_USE_RLE 1
@@ -795,7 +795,7 @@
 #if LV_USE_SDL
     #define LV_SDL_INCLUDE_PATH    <SDL2/SDL.h>
     #define LV_SDL_RENDER_MODE     LV_DISPLAY_RENDER_MODE_DIRECT   /*LV_DISPLAY_RENDER_MODE_DIRECT is recommended for best performance*/
-    #define LV_SDL_BUF_COUNT       1    /*1 or 2*/
+    #define LV_SDL_BUF_COUNT       2    /*1 or 2*/
     #define LV_SDL_FULLSCREEN      0    /*1: Make the window full screen by default*/
     #define LV_SDL_DIRECT_EXIT     1    /*1: Exit the application when all SDL windows are closed*/
 #endif
@@ -908,7 +908,6 @@
 #define LV_BIN_DECODER_SUPPORT_TRANSFORM    1
 #define LV_USE_RLE                  1
 #define LV_USE_DEMO_RENDER          1
-#define LV_USE_VECTOR_GRAPHIC       0
 #define LV_USE_THORVG               1
 #undef LV_USE_LODEPNG
 #define LV_USE_LODEPNG              1
