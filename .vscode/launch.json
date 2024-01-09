@@ -43,7 +43,7 @@
       "name": "(gdb) test",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/lvgl/tests/build_test_sysheap/test_snapshot",
+      "program": "${workspaceFolder}/lvgl/tests/build_test_sysheap/test_render_to_rgb888",
       "args": [],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}/",
