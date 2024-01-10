@@ -82,10 +82,10 @@
  *========================*/
 
 /*Align the stride of all layers and images to this bytes*/
-#define LV_DRAW_BUF_STRIDE_ALIGN                128
+#define LV_DRAW_BUF_STRIDE_ALIGN                64
 
 /*Align the start address of draw_buf addresses to this bytes*/
-#define LV_DRAW_BUF_ALIGN                       4
+#define LV_DRAW_BUF_ALIGN                       64
 
 #define LV_USE_DRAW_SW 1
 #if LV_USE_DRAW_SW == 1
@@ -271,7 +271,7 @@
  *Used by image decoders such as `lv_lodepng` to keep the decoded image in the memory.
  *Data larger than the size of the cache also can be allocated but
  *will be dropped immediately after usage.*/
-#define LV_CACHE_DEF_SIZE       (1024)
+#define LV_CACHE_DEF_SIZE       (1024 * 1024 *32)
 
 /*Number of stops allowed per gradient. Increase this to allow more stops.
  *This adds (sizeof(lv_color_t) + 1) bytes per additional stop*/
@@ -644,7 +644,7 @@
 #define LV_USE_BARCODE 1
 
 /*FreeType library*/
-#define LV_USE_FREETYPE 0
+#define LV_USE_FREETYPE 1
 #if LV_USE_FREETYPE
     /*Memory used by FreeType to cache characters [bytes]*/
     #define LV_FREETYPE_CACHE_SIZE (64 * 1024)
@@ -914,6 +914,19 @@
 #define LV_USE_LZ4                  1
 #define LV_USE_LZ4_INTERNAL         1
 #define LV_SDL_MOUSEWHEEL_MODE      0
+
+#define LV_USE_THORVG_INTERNAL      1
+/* Use VG-Lite GPU. */
+#define LV_USE_DRAW_VG_LITE         1
+
+#if LV_USE_DRAW_VG_LITE
+/* Enbale VG-Lite custom external 'gpu_init()' function */
+#define LV_VG_LITE_USE_GPU_INIT 1
+
+/* Enable VG-Lite assert. */
+#define LV_VG_LITE_USE_ASSERT 1
+#endif
+
 /*--END OF LV_CONF_H--*/
 
 #endif /*LV_CONF_H*/
