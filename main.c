@@ -14,6 +14,7 @@
 #include "lvgl/examples/lv_examples.h"
 #include "lvgl/demos/lv_demos.h"
 #include <math.h>
+#include <sys/syslimits.h>
 
 /*********************
  *      DEFINES
@@ -594,37 +595,6 @@ void test_image_zoom(void)
   lv_image_set_scale(img, zoom);
 }
 
-
-void draw_buf_stride_adjust_test(void)
-{
-    const char * img_src = "A:lvgl/tests/test_images/stride_align1/UNCOMPRESSED/test_I8.bin";
-    lv_obj_t * img = lv_image_create(lv_screen_active());
-    lv_obj_center(img);
-    lv_image_set_src(img, img_src);
-
-    lv_image_decoder_args_t args = {
-        .no_cache = true,
-        .premultiply = false,
-        .stride_align = false,
-        .use_indexed = true,
-    };
-
-    lv_image_decoder_dsc_t decoder_dsc;
-    lv_result_t res = lv_image_decoder_open(&decoder_dsc, img_src, &args);
-    lv_draw_buf_t * dup = lv_draw_buf_dup(decoder_dsc.decoded);
-    lv_image_decoder_close(&decoder_dsc);
-
-    lv_draw_buf_t * adjusted = lv_draw_buf_adjust_stride(dup, 80 + 64);
-
-    /*The image should still look same*/
-    img = lv_image_create(lv_screen_active());
-    lv_obj_set_style_outline_width(img, 1, 0);
-    lv_obj_set_style_outline_color(img, lv_color_black(), 0);
-
-    lv_obj_align(img, LV_ALIGN_TOP_MID, 0, 0);
-    lv_image_set_src(img, adjusted);
-
-}
 
 #if 0
 void test_snapshot(void)
