@@ -10,7 +10,7 @@
       "request": "launch",
       "program": "${file}",
       "console": "integratedTerminal",
-      "cwd": "${fileDirname}",
+      "cwd": "${workspaceFolder}",
       "justMyCode": false
     },
     {
@@ -43,10 +43,10 @@
       "name": "(gdb) test",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/lvgl/tests/build_test_sysheap/test_render_to_rgb888",
+      "program": "${workspaceFolder}/lvgl/tests/build_test_sysheap/test_snapshot",
       "args": [],
       "stopAtEntry": false,
-      "cwd": "${workspaceFolder}/",
+      "cwd": "${workspaceFolder}/lvgl/tests",
       "environment": [
         {
           "name": "DISPLAY",

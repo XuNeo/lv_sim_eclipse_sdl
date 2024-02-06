@@ -13,10 +13,23 @@
 #include "lvgl/lvgl.h"
 #include "lvgl/examples/lv_examples.h"
 #include "lvgl/demos/lv_demos.h"
+#include <math.h>
 
 /*********************
  *      DEFINES
  *********************/
+#ifndef FLT_EPSILON
+#define FLT_EPSILON 0x1.0p-23f
+#endif
+
+#define MATH_PI  3.14159265358979323846f
+#define MATH_HALF_PI 1.57079632679489661923f
+
+#define DEG_TO_RAD 0.017453292519943295769236907684886f
+#define RAD_TO_DEG 57.295779513082320876798154814105f
+
+#define MATH_RADIANS(deg) ((deg) * DEG_TO_RAD)
+#define MATH_DEGRESS(rad) ((rad) * RAD_TO_DEG)
 
 /**********************
  *      TYPEDEFS
@@ -86,7 +99,7 @@ static void create_pic_preview(void)
         "/home/neo/projects/lvgl/lv_port_pc_eclipse/output/rle_compressed/",
     };
 
-    char path[256];
+    char path[PATH_MAX];
 
     for (int i = 0; i < sizeof(roots) / sizeof(roots[0]); i++) {
         const char* root;
@@ -143,7 +156,7 @@ static void img_create(const char * name, const void * img_src, bool rotate, boo
     lv_image_set_src(img, img_src);
     lv_obj_set_style_image_recolor(img, lv_palette_main(LV_PALETTE_RED), 0);   /*For A8*/
     if(recolor) lv_obj_set_style_image_recolor_opa(img, LV_OPA_70, 0);
-    if(rotate) lv_image_set_angle(img, 450);
+    // if(rotate) lv_image_set_angle(img, 450);
 
     lv_obj_t * label = lv_label_create(cont);
     lv_label_set_text(label, name);
@@ -493,6 +506,399 @@ void test_func_1(void)
     create_panel(100, true);
 }
 
+void test_image_normal_align(void)
+{
+    lv_obj_t * img;
+    uint32_t i;
+    lv_image_align_t aligns[] = {
+        LV_IMAGE_ALIGN_TOP_LEFT, LV_IMAGE_ALIGN_TOP_MID, LV_IMAGE_ALIGN_TOP_RIGHT,
+        LV_IMAGE_ALIGN_LEFT_MID, LV_IMAGE_ALIGN_CENTER, LV_IMAGE_ALIGN_RIGHT_MID,
+        LV_IMAGE_ALIGN_BOTTOM_LEFT, LV_IMAGE_ALIGN_BOTTOM_MID, LV_IMAGE_ALIGN_BOTTOM_RIGHT,
+    };
+
+    for(i = 0; i < 9; i++) {
+        lv_obj_t * img = lv_image_create(lv_screen_active());
+        lv_image_set_src(img, "A:lvgl/tests/src/test_assets/test_img_lvgl_logo.png");
+        lv_obj_set_style_bg_opa(img, LV_OPA_20, 0);
+        lv_obj_set_style_shadow_width(img, 10, 0);
+        lv_obj_set_style_shadow_color(img, lv_color_hex(0xff0000), 0);
+
+        lv_obj_set_size(img, 200, 120);
+        lv_obj_set_pos(img, 30 + (i % 3) * 260, 40 + (i / 3) * 150);
+        lv_image_set_align(img, aligns[i]);
+    }
+
+}
+
+
+// void test_draw_buf_stride_adjust(void)
+// {
+//     const char * img_src = "A:lvgl/tests/test_images/stride_align64/UNCOMPRESSED/test_ARGB8888.bin";
+//     lv_obj_t * img = lv_image_create(lv_screen_active());
+//     lv_obj_center(img);
+//     lv_image_set_src(img, img_src);
+
+//     lv_image_decoder_args_t args = {
+//         .no_cache = false,
+//         .premultiply = false,
+//         .stride_align = false,
+//         .use_indexed = false,
+//     };
+
+//     lv_image_decoder_dsc_t decoder_dsc;
+//     lv_result_t res = lv_image_decoder_open(&decoder_dsc, img_src, &args);
+
+//     const lv_image_header_t * header = &decoder_dsc.decoded->header;
+
+//     lv_draw_buf_t * dup = lv_draw_buf_dup(decoder_dsc.decoded);
+
+//     /* Shrink stride to below minimal stride(by -1 in code below) should fail */
+//     res = lv_draw_buf_adjust_stride(dup, header->w * 4 - 1);
+
+//     /*The image should still look same*/
+//     lv_image_set_src(img, dup);
+
+//     /* Shrink stride to minimal stride should be OK */
+//     res = lv_draw_buf_adjust_stride(dup, header->w * 4);
+
+//     /*The image should still look same*/
+//     lv_image_set_src(img, dup);
+
+//     /* Expand the stride should work*/
+//     res = lv_draw_buf_adjust_stride(dup, (header->stride + header->w * 4) / 2);
+//     lv_image_set_src(img, dup);
+
+//     lv_image_decoder_close(&decoder_dsc);
+// }
+
+void test_image_zoom(void)
+{
+  lv_obj_t * root = lv_obj_create(lv_scr_act());
+  lv_obj_center(root);
+  lv_obj_set_style_pad_all(root, 0, 0);
+  lv_obj_set_size(root, 200, 200);
+  lv_obj_set_style_outline_width(root, 1, 0);
+
+  lv_obj_t * img = lv_image_create(root);
+  lv_obj_set_style_outline_width(img, 1, 0);
+  const char* img_path = "A:lvgl/tests/test_images/stride_align64/UNCOMPRESSED/test_ARGB8888.bin";
+  lv_image_set_src(img, img_path);
+  lv_image_header_t header;
+  lv_image_decoder_get_info(img_path, &header);
+
+  uint32_t zoom = 128;
+  // lv_obj_set_pos(img, 0, 0);
+  lv_obj_align(img, LV_ALIGN_TOP_MID, 0, 100);
+  // lv_image_set_pivot(img, 0, 0);
+  // lv_obj_set_size(img, header.w / 2, header.h / 2);
+  lv_image_set_scale(img, zoom);
+}
+
+
+void draw_buf_stride_adjust_test(void)
+{
+    const char * img_src = "A:lvgl/tests/test_images/stride_align1/UNCOMPRESSED/test_I8.bin";
+    lv_obj_t * img = lv_image_create(lv_screen_active());
+    lv_obj_center(img);
+    lv_image_set_src(img, img_src);
+
+    lv_image_decoder_args_t args = {
+        .no_cache = true,
+        .premultiply = false,
+        .stride_align = false,
+        .use_indexed = true,
+    };
+
+    lv_image_decoder_dsc_t decoder_dsc;
+    lv_result_t res = lv_image_decoder_open(&decoder_dsc, img_src, &args);
+    lv_draw_buf_t * dup = lv_draw_buf_dup(decoder_dsc.decoded);
+    lv_image_decoder_close(&decoder_dsc);
+
+    lv_draw_buf_t * adjusted = lv_draw_buf_adjust_stride(dup, 80 + 64);
+
+    /*The image should still look same*/
+    img = lv_image_create(lv_screen_active());
+    lv_obj_set_style_outline_width(img, 1, 0);
+    lv_obj_set_style_outline_color(img, lv_color_black(), 0);
+
+    lv_obj_align(img, LV_ALIGN_TOP_MID, 0, 0);
+    lv_image_set_src(img, adjusted);
+
+}
+
+#if 0
+void test_snapshot(void)
+{
+    lv_obj_t* root = lv_obj_create(lv_scr_act());
+    lv_obj_set_style_bg_color(root, lv_color_hex(0x00), 0);
+    lv_obj_set_style_bg_opa(root, LV_OPA_COVER, 0);
+
+    lv_obj_set_size(root, 150, 100);
+    lv_obj_t* label = lv_obj_create(root);
+    lv_obj_set_style_bg_opa(label, LV_OPA_50, 0);
+    lv_obj_set_style_bg_color(label, lv_color_hex(0xff0000), 0);
+    lv_obj_set_style_border_width(label, 0, 0);
+    lv_obj_set_size(label, 100, 50);
+    lv_obj_center(label);
+    lv_obj_align(root, LV_ALIGN_TOP_MID, 0, 100);
+
+    lv_obj_t* root2 = lv_obj_create(lv_scr_act());
+    lv_obj_set_style_bg_color(root2, lv_color_hex(0x00), 0);
+    lv_obj_set_style_bg_opa(root2, LV_OPA_COVER, 0);
+    lv_obj_align(root2, LV_ALIGN_BOTTOM_MID, 0, -100);
+
+    lv_draw_buf_t* draw_buf = lv_snapshot_take(label, LV_COLOR_FORMAT_ARGB8888);
+    lv_draw_buf_save_file(draw_buf, "A:test.bin");
+    lv_obj_t* image = lv_image_create(root2);
+    lv_image_set_src(image, draw_buf);
+    lv_obj_center(image);
+    lv_obj_align(root2, LV_ALIGN_BOTTOM_MID, 0, -100);
+}
+#endif
+
+void test_image_bar(void)
+{
+
+}
+
+void draw_arc(lv_layer_t * layer,  const lv_area_t * coords, const char* img_src, float center_x, float center_y, float start_angle, float end_angle, float radius, float width, bool rounded)
+{
+    if(width <= 0)
+        return;
+    if(start_angle == end_angle)
+        return;
+
+    lv_area_t clip_area;
+    if(!_lv_area_intersect(&clip_area, coords,  &layer->_clip_area)) {
+        /*Fully clipped, nothing to do*/
+        return;
+    }
+
+    float sweep_angle = end_angle - start_angle;
+
+    while(sweep_angle < 0) {
+        sweep_angle += 360;
+    }
+
+    while(sweep_angle > 360) {
+        sweep_angle -= 360;
+    }
+
+    /*If the angles are the same then there is nothing to draw*/
+    if(fabsf(sweep_angle)  < FLT_EPSILON) {
+        return;
+    }
+
+    lv_vector_dsc_t * ctx = lv_vector_dsc_create(layer);
+    lv_vector_path_t * path = lv_vector_path_create(LV_VECTOR_PATH_QUALITY_MEDIUM);
+
+    float radius_out = radius;
+    float radius_in = radius - width;
+    float half_width = width * 0.5f;
+    float radius_center = radius_out - half_width;
+    float cx = center_x;
+    float cy = center_y;
+
+    if(fabs(sweep_angle - 360) < FLT_EPSILON) {
+        lv_vector_path_append_circle(path, &(lv_fpoint_t){cx, cy}, radius_out, radius_out);
+        lv_vector_path_append_circle(path, &(lv_fpoint_t){cx, cy}, radius_in, radius_in);
+    }
+    else {
+        /* radius_out start point */
+        float start_angle_rad = MATH_RADIANS(start_angle);
+        float start_x = radius_out * cosf(start_angle_rad) + cx;
+        float start_y = radius_out * sinf(start_angle_rad) + cy;
+
+        /* radius_in start point */
+        float end_angle_rad = MATH_RADIANS(end_angle);
+        float end_x = radius_in * cosf(end_angle_rad) + cx;
+        float end_y = radius_in * sinf(end_angle_rad) + cy;
+
+        /* radius_out arc */
+        lv_vector_path_append_arc(path,
+                                  &(lv_fpoint_t){cx, cy},
+                                  radius_out,
+                                  start_angle,
+                                  sweep_angle,
+                                  false);
+
+        /* line to radius_in */
+        lv_vector_path_line_to(path, &(lv_fpoint_t){end_x, end_y});
+
+        /* radius_in arc */
+        lv_vector_path_append_arc(path,
+                                  &(lv_fpoint_t){cx, cy},
+                                  radius_in,
+                                  end_angle,
+                                  -sweep_angle,
+                                  false);
+
+        /* close arc */
+        lv_vector_path_line_to(path, &(lv_fpoint_t){start_x, start_y});
+        lv_vector_path_close(path);
+        /* draw round */
+        if(rounded && half_width > 0) {
+            float rcx1 = cx + radius_center * cosf(end_angle_rad);
+            float rcy1 = cy + radius_center * sinf(end_angle_rad);
+            lv_vector_path_append_circle(path, &(lv_fpoint_t){rcx1, rcy1}, half_width, half_width);
+
+            float rcx2 = cx + radius_center * cosf(start_angle_rad);
+            float rcy2 = cy + radius_center * sinf(start_angle_rad);
+            lv_vector_path_append_circle(path, &(lv_fpoint_t){rcx2, rcy2}, half_width, half_width);
+        }
+    }
+
+    lv_vector_dsc_translate(ctx, coords->x1, coords->y1);
+    lv_draw_image_dsc_t draw_img_dsc;
+    lv_draw_image_dsc_init(&draw_img_dsc);
+    draw_img_dsc.src = img_src;
+    lv_vector_dsc_set_fill_image(ctx, &draw_img_dsc);
+    lv_area_t bound;
+    lv_vector_path_get_bounding(path, &bound);
+    lv_matrix_t m;
+    lv_matrix_identity(&m);
+    lv_matrix_translate(&m, -bound.x1, -bound.y1);
+    lv_vector_dsc_set_fill_transform(ctx, &m);
+    lv_vector_dsc_set_fill_rule(ctx, LV_VECTOR_FILL_EVENODD);
+    lv_vector_dsc_add_path(ctx, path);
+
+    lv_vector_path_clear(path);
+    lv_vector_path_append_rect(path, coords, 0, 0);
+    lv_vector_dsc_set_fill_color(ctx, lv_color_hex(0xff0000));
+    lv_vector_dsc_set_fill_opa(ctx, LV_OPA_50);
+    lv_vector_dsc_add_path(ctx, path);
+
+    lv_draw_vector(ctx); /* submit draw */
+
+    lv_vector_path_delete(path);
+    lv_vector_dsc_delete(ctx);
+}
+
+static void timer_cb(lv_timer_t * timer)
+{
+  lv_obj_t * canvas = timer->user_data;
+    lv_layer_t layer;
+    lv_canvas_fill_bg(canvas, lv_color_hex(0xffffff), LV_OPA_COVER);
+    lv_canvas_init_layer(canvas, &layer);
+
+    static int32_t y = 150;
+    lv_area_t coords = {
+      .x1 = 20,
+      .y1 = 20,
+      .x2 = y,
+      .y2 = y,
+    };
+     y += 1;
+     if (y > 479) y = 1;
+
+    layer._clip_area = coords;
+    draw_arc(&layer, &coords, "A:testimg.png", 240, 240, 0, 360, 100, 50, false);
+    lv_canvas_finish_layer(canvas, &layer);
+}
+
+void test_draw_arc(void)
+{
+    // lv_obj_t * parent = lv_obj_create(lv_scr_act());
+    // lv_obj_center(parent);
+    // lv_obj_set_size(parent, 100, 100);
+    lv_draw_buf_t * draw_buf = lv_draw_buf_create(480, 480, LV_COLOR_FORMAT_ARGB8888, LV_STRIDE_AUTO);
+    lv_obj_t * canvas = lv_canvas_create(lv_scr_act());
+    lv_canvas_set_draw_buf(canvas, draw_buf);
+    lv_obj_center(canvas);
+    lv_obj_set_style_outline_width(canvas, 1, 0);
+
+    lv_layer_t layer;
+    lv_canvas_init_layer(canvas, &layer);
+
+    lv_area_t coords = {
+      .x1 = 20,
+      .y1 = 20,
+      .x2 = 479,
+      .y2 = 479,
+    };
+
+    draw_arc(&layer, &coords, "A:testimg.png", 240, 240, 0, 360, 100, 50, false);
+
+    lv_canvas_finish_layer(canvas, &layer);
+
+    lv_timer_create(timer_cb, 1, canvas);
+}
+
+#include "lvx_imgbar.h"
+
+void test_imgbar(void)
+{
+  lv_obj_t * bar = lvx_imgbar_create(lv_scr_act());
+  lv_obj_center(bar);
+  lv_obj_set_pos(bar, 0, 0);
+
+  lvx_imgbar_set_src(bar, "A:testimg.png");
+  lvx_imgbar_set_angle(bar, 45, 270);
+  lvx_imgbar_set_center(bar, 240, 240);
+  lvx_imgbar_set_radius(bar, 230);
+  lvx_imgbar_set_bar_width(bar, 50);
+
+  lv_obj_set_style_pad_all(bar, 0, 0);
+  lv_obj_set_style_outline_width(bar, 1, 0);
+  lv_obj_set_style_outline_color(bar, lv_color_black(), 0);
+  lv_obj_set_style_outline_opa(bar, LV_OPA_COVER, 0);
+}
+
+void test_arc(void)
+{
+  lv_obj_t * obj = lv_obj_create(lv_scr_act());
+  lv_obj_set_style_bg_color(obj, lv_color_hex(0xff0000), 0);
+  lv_obj_set_size(obj, 50, 50);
+  lv_obj_center(obj);
+
+  lv_obj_t * bar = lv_arc_create(lv_scr_act());
+  lv_obj_center(bar);
+  lv_obj_set_style_arc_image_src(bar, "A:testimg.png", LV_PART_INDICATOR);
+  lv_obj_set_size(bar, 466, 466);
+  lv_obj_set_style_line_width(bar, 20, 0);
+  lv_obj_set_style_arc_width(bar, 50, LV_PART_INDICATOR);
+  lv_arc_set_start_angle(bar, 45);
+  lv_arc_set_end_angle(bar, 270);
+  lv_arc_set_value(bar, 50);
+}
+
+#include "lvx_img_line_bar.h"
+void test_img_line_bar(void)
+{
+  lv_obj_t * bar = lvx_img_line_bar_create(lv_scr_act());
+  lv_obj_center(bar);
+  lvx_imgbar_set_src(bar, "A:testimg.png");
+  lv_obj_set_style_outline_width(bar, 1, 0);
+  lvx_img_line_bar_set_para(bar, (lv_point_precise_t){
+    50, 50,
+  },
+  (lv_point_precise_t){
+    100,100,
+  }, 50, 1
+  );
+}
+
+void test_arc_issue(void)
+{
+  lv_obj_t *arc = lv_arc_create(lv_scr_act());
+  // lv_obj_set_style_bg_opa(arc, LV_OPA_TRANSP, LV_PART_MAIN);
+  lv_obj_set_style_pad_all(arc, 4, LV_PART_MAIN);
+
+  lv_obj_set_style_arc_image_src(arc,"A:lvgl/tests/test_images/stride_align1/UNCOMPRESSED/test_RGB565A8.bin", LV_PART_MAIN);
+  lv_obj_set_style_arc_width(arc, 16, LV_PART_MAIN);
+
+  // lv_obj_set_style_arc_image_src(arc, "A:lvgl/tests/test_images/stride_align1/UNCOMPRESSED/test_RGB565A8.bin", LV_PART_INDICATOR);
+  // lv_obj_set_style_arc_width(arc, 16, LV_PART_INDICATOR);
+
+  // lv_obj_set_style_arc_color(arc, theme->home.out.text2, LV_PART_INDICATOR);
+  // lv_obj_set_style_arc_opa(arc, LV_OPA_COVER, LV_PART_INDICATOR);
+  lv_obj_set_size(arc, 62 + 6, 62 + 6);
+  lv_arc_set_rotation(arc, 180);
+  lv_arc_set_bg_angles(arc, 0, 180);
+  lv_arc_set_range(arc, 0, 1000);
+  lv_arc_set_value(arc, 00);
+}
+
 int main(int argc, char **argv)
 {
   (void)argc; /*Unused*/
@@ -516,7 +922,7 @@ int main(int argc, char **argv)
 
   /*To hide the memory and performance indicators in the corners
    *disable `LV_USE_MEM_MONITOR` and `LV_USE_PERF_MONITOR` in `lv_conf.h`*/
-  hal_init(480, 320);
+  hal_init(800, 600);
 
   // test_property();
   // obj_property_example();
@@ -532,10 +938,28 @@ int main(int argc, char **argv)
   LV_IMAGE_DECLARE(cogwheel_I1);
   LV_IMAGE_DECLARE(cogwheel_ARGB8888);
 
+  // lv_demo_brightness();
+  // test_arc_issue();
+  // lv_example_slider_1();
+  // lv_example_switch_1();
+  // test_arc();
+  // test_imgbar();
+  // test_img_line_bar();
+  // test_draw_arc();
+  // test_snapshot();
+  // lv_demo_vector_graphic();
+  // draw_buf_stride_adjust_test();
+  // lv_example_calendar_1();
+  // test_image_zoom();
+  // test_barcode_normal();
+  // test_draw_buf_stride_adjust();
+  // lv_demo_widgets();
+  // test_image_normal_align();
+  // lv_example_snapshot_1();
   // lv_example_ffmpeg_2();
   // test_func_1();
-  // img_create("avatar", "/home/neo/projects/lvgl/lv_port_pc_eclipse/output/cogwheel.RGB565.bin", false, false);
-  // img_create("avatar", "A:lvgl/tests/test_images/stride_align1/UNCOMPRESSED/test_ARGB8888.bin", false, false);
+  img_create("avatar", "/home/neo/projects/lvgl/lv_port_pc_eclipse/output/cogwheel.ARGB8565.bin", false, false);
+  // img_create("avatar", "A:lvgl/tests/test_images/stride_align1/RLE/test_ARGB8888.bin", false, false);
   // lv_demo_render(LV_DEMO_RENDER_SCENE_DECODE_SPEED, 0);
   // img_create("avatar", "/home/neo/projects/lvgl/lv_port_pc_eclipse/mouse_cursor_icon.png", false, false);
   // img_create("avatar", "/home/neo/projects/lvgl/lv_port_pc_eclipse/flower.jpg", false, false);
@@ -566,7 +990,7 @@ int main(int argc, char **argv)
   // lv_obj_t * img1 = lv_image_create(lv_scr_act());
   // lv_image_set_src(img1,  "/home/neo/projects/lvgl/lv_port_pc_eclipse/lvgl/tests/src/test_files/binimages/cogwheel.RGB565A8.bin");
   // lv_image_set_rotation(img1, 450);
-  lv_demo_widgets();
+  // lv_demo_widgets();
     //  lv_demo_music();
     //  lv_demo_widgets();
   // lv_example_image_1();

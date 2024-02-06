@@ -49,6 +49,7 @@ const lv_image_dsc_t mouse_cursor_icon = {
   .header.cf = LV_COLOR_FORMAT_ARGB8888,
   .header.w = 13,
   .header.h = 21,
+  .header.stride = 13 * 4,
   .data_size = 273 * 4,
   .data = mouse_cursor_icon_map,
 };

@@ -20,23 +20,12 @@ add_compile_definitions($<$<BOOL:${LV_USE_LIBPNG}>:LV_USE_LIBPNG=1>)
 add_compile_definitions($<$<BOOL:${LV_USE_LIBJPEG_TURBO}>:LV_USE_LIBJPEG_TURBO=1>)
 add_compile_definitions($<$<BOOL:${LV_USE_FFMPEG}>:LV_USE_FFMPEG=1>)
 
-# vg-lite
-set(EXTERNAL_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-file(GLOB VG_LITE_SOURCES
-        ${EXTERNAL_SOURCE_DIR}/vg_lite_tvg/*.c
-        ${EXTERNAL_SOURCE_DIR}/vg_lite_tvg/*.cpp
-        )
-
-add_definitions(-DCONFIG_VG_LITE_TVG_16PIXELS_ALIGN=1)
-add_definitions(-DTHORVG_SW_RASTER_SUPPORT=1)
-
 add_subdirectory(lvgl)
 target_include_directories(lvgl PUBLIC ${PROJECT_SOURCE_DIR} ${SDL2_INCLUDE_DIRS})
-target_include_directories(lvgl PUBLIC ${EXTERNAL_SOURCE_DIR}/vg_lite_tvg)
 
 file(GLOB_RECURSE TEST_IMAGES ${CMAKE_CURRENT_SOURCE_DIR}/output/*.c)
 
-add_executable(main main.c mouse_cursor_icon.c ${TEST_IMAGES} ${VG_LITE_SOURCES})
+add_executable(main main.c mouse_cursor_icon.c ${TEST_IMAGES} lvx_imgbar.c lvx_img_line_bar.c)
 target_compile_definitions(main PRIVATE LV_CONF_INCLUDE_SIMPLE)
 target_link_libraries(main lvgl lvgl::examples lvgl::demos lvgl::thorvg ${SDL2_LIBRARIES} m pthread)
 add_custom_target (run COMMAND ${EXECUTABLE_OUTPUT_PATH}/main DEPENDS main)
@@ -102,6 +91,8 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
         -Wfloat-conversion
         -Wstrict-aliasing
         -Wunused-variable
+        -Wno-implicit-function-declaration
+        -Wno-double-promotion
     )
 
     target_compile_options(main PRIVATE -fsanitize=address,leak,undefined)
