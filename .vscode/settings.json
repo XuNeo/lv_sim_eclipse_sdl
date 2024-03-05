@@ -3,5 +3,15 @@
     "cmake.configureOnOpen": false,
     "cSpell.words": [
         "premulitplying"
-    ]
+    ],
+    "files.associations": {
+        "lv_examples.h": "c",
+        "lv_demos.h": "c",
+        "lv_demo_benchmark.h": "c",
+        "lv_demo_widgets.h": "c",
+        "__locale": "c",
+        "locale": "c",
+        "thread": "c",
+        "typeinfo": "c"
+    }
 }

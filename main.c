@@ -869,6 +869,38 @@ void test_arc_issue(void)
   lv_arc_set_value(arc, 00);
 }
 
+void lv_example_test(void)
+{
+    lv_obj_t * cont = lv_obj_create(lv_screen_active());
+    lv_obj_set_size(cont, 400, 500);
+    lv_obj_center(cont);
+    lv_obj_set_flex_flow(cont, LV_FLEX_FLOW_COLUMN);
+
+    lv_obj_t * label = lv_label_create(cont);
+    lv_obj_set_size(label, 100, 100);
+    lv_label_set_text(label, "scale(0)\n");
+    lv_obj_center(label);
+
+    lv_obj_t * label1 = lv_label_create(cont);
+    lv_obj_set_size(label1, 100, 100);
+    lv_label_set_text(label1, "scale(0.5)\n");
+    lv_obj_set_style_transform_scale(label1, (0.5 * LV_ZOOM_NONE), LV_PART_MAIN);
+    lv_obj_center(label1);
+
+    lv_obj_t * label2 = lv_label_create(cont);
+    lv_obj_set_size(label2, 100, 100);
+    lv_label_set_text(label2, "scalex(0.5)\n");
+    lv_obj_set_style_transform_scale_x(label2, (0.5 * LV_ZOOM_NONE), LV_PART_MAIN);
+    lv_obj_center(label2);
+
+    lv_obj_t * label3 = lv_label_create(cont);
+    lv_obj_set_size(label3, 100, 100);
+    lv_label_set_text(label3, "scaley(0.5)\n");
+    lv_obj_set_style_transform_scale_y(label3, (0.5 * LV_ZOOM_NONE), LV_PART_MAIN);
+    lv_obj_center(label3);
+
+}
+
 int main(int argc, char **argv)
 {
   (void)argc; /*Unused*/
@@ -908,6 +940,7 @@ int main(int argc, char **argv)
   LV_IMAGE_DECLARE(cogwheel_I1);
   LV_IMAGE_DECLARE(cogwheel_ARGB8888);
 
+  // lv_example_test();
   // lv_demo_brightness();
   // test_arc_issue();
   // lv_example_slider_1();
@@ -928,8 +961,10 @@ int main(int argc, char **argv)
   // lv_example_snapshot_1();
   // lv_example_ffmpeg_2();
   // test_func_1();
-  img_create("avatar", "/home/neo/projects/lvgl/lv_port_pc_eclipse/output/cogwheel.ARGB8565.bin", false, false);
+  // img_create("avatar", "/home/neo/projects/lvgl/lv_port_pc_eclipse/output/cogwheel.ARGB8565.bin", false, false);
   // img_create("avatar", "A:lvgl/tests/test_images/stride_align1/RLE/test_ARGB8888.bin", false, false);
+  // img_create("avatar", "A:lvgl/tests/test_images/stride_align1/RLE/test_I8.bin", false, false);
+  img_create("avatar", "A:pngs/cogwheel.I8-fs8.png", false, false);
   // lv_demo_render(LV_DEMO_RENDER_SCENE_DECODE_SPEED, 0);
   // img_create("avatar", "/home/neo/projects/lvgl/lv_port_pc_eclipse/mouse_cursor_icon.png", false, false);
   // img_create("avatar", "/home/neo/projects/lvgl/lv_port_pc_eclipse/flower.jpg", false, false);

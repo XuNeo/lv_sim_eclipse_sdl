@@ -28,7 +28,7 @@
         }
       ],
       "externalConsole": false,
-      "MIMode": "gdb",
+      "MIMode": "lldb",
       // "miDebuggerPath": "${workspaceFolder}/gdb",
       "setupCommands": [
         {
@@ -43,7 +43,7 @@
       "name": "(gdb) test",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/lvgl/tests/build_test_sysheap/test_snapshot",
+      "program": "${workspaceFolder}/lvgl/tests/build_test_sysheap/test_clip_corner",
       "args": [],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}/lvgl/tests",
@@ -54,7 +54,7 @@
         }
       ],
       "externalConsole": false,
-      "MIMode": "gdb",
+      "MIMode": "lldb",
       // "miDebuggerPath": "${workspaceFolder}/gdb",
       "setupCommands": [
         {

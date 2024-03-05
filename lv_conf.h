@@ -177,14 +177,14 @@
 #define LV_USE_DRAW_SDL 0
 
 /* Use VG-Lite GPU. */
-#define LV_USE_DRAW_VG_LITE 0
+#define LV_USE_DRAW_VG_LITE 1
 
 #if LV_USE_DRAW_VG_LITE
 /* Enable VG-Lite custom external 'gpu_init()' function */
-#define LV_VG_LITE_USE_GPU_INIT 0
+#define LV_VG_LITE_USE_GPU_INIT 1
 
 /* Enable VG-Lite assert. */
-#define LV_VG_LITE_USE_ASSERT 0
+#define LV_VG_LITE_USE_ASSERT 1
 
 /* VG-Lite flush commit trigger threshold. GPU will try to batch these many draw tasks. */
 #define LV_VG_LITE_FLUSH_MAX_COUNT 8
@@ -315,7 +315,7 @@
 
 /* VG-Lite Simulator */
 /*Requires: LV_USE_THORVG_INTERNAL or LV_USE_THORVG_EXTERNAL */
-#define LV_USE_VG_LITE_THORVG  0
+#define LV_USE_VG_LITE_THORVG  1
 
 #if LV_USE_VG_LITE_THORVG
 
@@ -612,18 +612,18 @@
 /*File system interfaces for common APIs */
 
 /*API for fopen, fread, etc*/
-#define LV_USE_FS_STDIO 0
+#define LV_USE_FS_STDIO 1
 #if LV_USE_FS_STDIO
-    #define LV_FS_STDIO_LETTER '\0'     /*Set an upper cased letter on which the drive will accessible (e.g. 'A')*/
-    #define LV_FS_STDIO_PATH ""         /*Set the working directory. File/directory paths will be appended to it.*/
+    #define LV_FS_STDIO_LETTER 'A'     /*Set an upper cased letter on which the drive will accessible (e.g. 'A')*/
+    #define LV_FS_STDIO_PATH "/Users/neo/projects/lvgl/lv_port_pc_eclipse/"         /*Set the working directory. File/directory paths will be appended to it.*/
     #define LV_FS_STDIO_CACHE_SIZE 0    /*>0 to cache this number of bytes in lv_fs_read()*/
 #endif
 
 /*API for open, read, etc*/
-#define LV_USE_FS_POSIX 0
+#define LV_USE_FS_POSIX 1
 #if LV_USE_FS_POSIX
-    #define LV_FS_POSIX_LETTER '\0'     /*Set an upper cased letter on which the drive will accessible (e.g. 'A')*/
-    #define LV_FS_POSIX_PATH ""         /*Set the working directory. File/directory paths will be appended to it.*/
+    #define LV_FS_POSIX_LETTER '/'     /*Set an upper cased letter on which the drive will accessible (e.g. 'A')*/
+    #define LV_FS_POSIX_PATH "/"         /*Set the working directory. File/directory paths will be appended to it.*/
     #define LV_FS_POSIX_CACHE_SIZE 0    /*>0 to cache this number of bytes in lv_fs_read()*/
 #endif
 
@@ -649,10 +649,14 @@
 #endif
 
 /*LODEPNG decoder library*/
+#ifndef LV_USE_LODEPNG
 #define LV_USE_LODEPNG 0
+#endif
 
 /*PNG decoder(libpng) library*/
+#ifndef LV_USE_LIBPNG
 #define LV_USE_LIBPNG 0
+#endif
 
 /*BMP decoder library*/
 #define LV_USE_BMP 0
@@ -731,7 +735,9 @@
 
 /*FFmpeg library for image decoding and playing videos
  *Supports all major image formats so do not enable other image decoder with it*/
+#ifndef LV_USE_FFMPEG
 #define LV_USE_FFMPEG 0
+#endif
 #if LV_USE_FFMPEG
     /*Dump input information to stderr*/
     #define LV_FFMPEG_DUMP_FORMAT 0
@@ -941,7 +947,7 @@
  ====================*/
 
 /*Show some widget. It might be required to increase `LV_MEM_SIZE` */
-#define LV_USE_DEMO_WIDGETS 0
+#define LV_USE_DEMO_WIDGETS 1
 
 /*Demonstrate the usage of encoder and keyboard*/
 #define LV_USE_DEMO_KEYPAD_AND_ENCODER 0

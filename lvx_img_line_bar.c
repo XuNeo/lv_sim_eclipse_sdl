@@ -62,7 +62,7 @@ const lv_obj_class_t lvx_img_line_bar_class = {
  */
 lv_obj_t* lvx_img_line_bar_create(lv_obj_t* parent)
 {
-    lv_obj_class_create_obj(MY_CLASS, parent);
+    return lv_obj_class_create_obj(MY_CLASS, parent);
 }
 
 void lvx_img_line_bar_set_para(lv_obj_t* obj, lv_point_precise_t start, lv_point_precise_t end,

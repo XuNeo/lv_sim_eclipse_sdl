@@ -3,6 +3,7 @@ project(lvgl)
 
 option(LV_USE_DRAW_SDL "Use SDL draw unit" OFF)
 option(LV_USE_LIBPNG "Use libpng to decode PNG" OFF)
+option(LV_USE_LODEPNG "Use lodpng to decode PNG" OFF)
 option(LV_USE_LIBJPEG_TURBO "Use libjpeg turbo to decode JPEG" OFF)
 option(LV_USE_FFMPEG "Use libffmpeg to display video using lv_ffmpeg" OFF)
 option(LV_USE_FREETYPE "Use freetype lib" OFF)
@@ -17,6 +18,7 @@ find_package(SDL2 REQUIRED SDL2)
 
 add_compile_definitions($<$<BOOL:${LV_USE_DRAW_SDL}>:LV_USE_DRAW_SDL=1>)
 add_compile_definitions($<$<BOOL:${LV_USE_LIBPNG}>:LV_USE_LIBPNG=1>)
+add_compile_definitions($<$<BOOL:${LV_USE_LODEPNG}>:LV_USE_LODEPNG=1>)
 add_compile_definitions($<$<BOOL:${LV_USE_LIBJPEG_TURBO}>:LV_USE_LIBJPEG_TURBO=1>)
 add_compile_definitions($<$<BOOL:${LV_USE_FFMPEG}>:LV_USE_FFMPEG=1>)
 
@@ -69,13 +71,13 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     target_compile_options(lvgl PRIVATE
         -pedantic-errors
         -Wall
-        -Wclobbered
+        # -Wclobbered
         -Wdeprecated
         -Wdouble-promotion
         -Wempty-body
         -Wextra
         -Wformat-security
-        -Wmaybe-uninitialized
+        # -Wmaybe-uninitialized
         # -Wmissing-prototypes
         -Wpointer-arith
         -Wmultichar
@@ -95,6 +97,6 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
         -Wno-double-promotion
     )
 
-    target_compile_options(main PRIVATE -fsanitize=address,leak,undefined)
-    target_link_options(main PRIVATE -fsanitize=address,leak,undefined)
+    target_compile_options(main PRIVATE -fsanitize=address,undefined)
+    target_link_options(main PRIVATE -fsanitize=address,undefined)
 endif()
