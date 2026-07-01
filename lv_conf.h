@@ -333,7 +333,11 @@
 #define LV_ATTRIBUTE_EXTERN_DATA
 
 /* Use `float` as `lv_value_precise_t` */
-#define LV_USE_FLOAT            0
+#define LV_USE_FLOAT            1
+
+/*1: Enable matrix operations (required by LV_USE_VECTOR_GRAPHIC)
+ * Requires `LV_USE_FLOAT = 1` */
+#define LV_USE_MATRIX           1
 
 /*==================
  *   FONT USAGE
